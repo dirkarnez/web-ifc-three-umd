@@ -5,12 +5,12 @@ import {IFCWALLSTANDARDCASE, IFCSLAB, IFCWINDOW, IFCSPACE, IFCOPENINGELEMENT} fr
 import {downloadZip} from "client-zip";
 
 export class IfcManager {
-    constructor(scene, ifcModels) {
+    constructor(scene) {
         this.scene = scene;
-        this.ifcModels = ifcModels;
+        this.ifcModels = [];
         this.ifcLoader = new IFCLoader();
         this.setupIfcLoader();
-        this.setupFileOpener();
+        // this.setupFileOpener();
     }
 
     remove = false;
@@ -30,27 +30,26 @@ export class IfcManager {
     }
 
     async setupIfcLoader() {
-
         await this.ifcLoader.ifcManager.parser.setupOptionalCategories({
             [IFCSPACE]: false,
             [IFCOPENINGELEMENT]: false
         });
 
-        // await this.ifcLoader.ifcManager.useWebWorkers(true, 'IFCWorker.js');
+        await this.ifcLoader.ifcManager.useWebWorkers(true, 'IFCWorker.js');
         this.setupThreeMeshBVH();
     }
 
-    setupFileOpener() {
-        const input = document.querySelector('input[type="file"]');
-        if (!input) return;
-        input.addEventListener(
-            'change',
-            async (changed) => {
-                await this.loadIFC(changed);
-            },
-            false
-        );
-    }
+    // setupFileOpener() {
+    //     const input = document.querySelector('input[type="file"]');
+    //     if (!input) return;
+    //     input.addEventListener(
+    //         'change',
+    //         async (changed) => {
+    //             await this.loadIFC(changed);
+    //         },
+    //         false
+    //     );
+    // }
 
     async dispose() {
         this.ifcModels.length = 0;
@@ -63,7 +62,6 @@ export class IfcManager {
     subset = {};
 
     async loadIFC(changed) {
-
         const start = window.performance.now()
 
         const ifcURL = URL.createObjectURL(changed.target.files[0]);

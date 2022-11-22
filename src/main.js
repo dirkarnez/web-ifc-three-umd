@@ -1,13 +1,10 @@
 import { ThreeScene } from './scene';
 import { IfcManager } from './ifc-manager';
+import * as WebIFC from 'web-ifc';
 
-const ifcModels = [];
 
 //document.getElementById('threeCanvas');
-export default htmlElement => {
-    const ifcManager = new IfcManager(new ThreeScene(htmlElement).scene, ifcModels);
-    return {
-        ifcManager,
-        ifcModels
-    }
+export default {
+    WebIFC,
+    createScene: htmlElement => new IfcManager(new ThreeScene(htmlElement).scene)
 }
