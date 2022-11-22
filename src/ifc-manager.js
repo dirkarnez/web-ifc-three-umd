@@ -1,7 +1,7 @@
 import {Matrix4} from 'three';
 import {IFCLoader} from 'web-ifc-three/IFCLoader';
 import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree} from 'three-mesh-bvh';
-import {IFCWALLSTANDARDCASE, IFCSLAB, IFCWINDOW, IFCSPACE, IFCOPENINGELEMENT} from 'web-ifc';
+import {IFCSPACE, IFCOPENINGELEMENT} from 'web-ifc';
 import {downloadZip} from "client-zip";
 
 export class IfcManager {
@@ -36,6 +36,7 @@ export class IfcManager {
         });
 
         await this.ifcLoader.ifcManager.useWebWorkers(true, 'IFCWorker.js');
+
         this.setupThreeMeshBVH();
     }
 
@@ -73,18 +74,17 @@ export class IfcManager {
             COORDINATE_TO_ORIGIN: firstModel,
             USE_FAST_BOOLS: true
         });
-
         // const useFragments = document.getElementById('useFragment');
 
         // this.ifcLoader.ifcManager.useFragments = useFragments.checked;
         const ifcModel = await this.ifcLoader.loadAsync(ifcURL);
-
+        
         if (firstModel) {
             const matrixArr = await this.ifcLoader.ifcManager.ifcAPI.GetCoordinationMatrix(ifcModel.modelID);
             const matrix = new Matrix4().fromArray(matrixArr);
             this.ifcLoader.ifcManager.setupCoordinationMatrix(matrix);
         }
-
+        
         this.ifcModels.push(ifcModel);
         this.scene.add(ifcModel);
 
@@ -96,6 +96,8 @@ export class IfcManager {
 
         console.log(`Time Taken to load = ${(stop - start) / 1000} seconds`);
     }
+
+    
 
     // async downloadFragment(model) {
 
