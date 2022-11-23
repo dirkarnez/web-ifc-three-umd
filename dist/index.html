@@ -1,44 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="icon" type="image/png" href="./favicon.ico" />
     <link rel="stylesheet" type="text/css" href="./styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IFC.js</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <div id="input-container">
-      <input readonly type="file" id="openFileDialog" />
-      <!-- <div>
+        <input readonly type="file" id="openFileDialog" />
+        <!-- <div>
         <label for="useFragment"> Use fragments </label>
         <input type="checkbox" id="useFragment" />
       </div> -->
     </div>
     <canvas id="threeCanvas"></canvas>
     <p style="padding-left: 150px;">Hello World</p>
-    <a id ="test-button" class="button4" style="background-color:#a79e1cef">TEST</a>
+    <a id="test-button" class="button4" style="background-color:#a79e1cef">TEST</a>
     <script src="./bundle.min.js"></script>
     <script>
-      const { 
-      IFCLOCALPLACEMENT, IfcLocalPlacement,
-      IFCDIRECTION, IfcDirection,
-      IFCAXIS2PLACEMENT3D, IfcAxis2Placement3D,
-      IFCAXIS2PLACEMENT2D, IfcAxis2Placement2D,
-      IFCCIRCLEPROFILEDEF, IfcCircleProfileDef,
-      IfcProfileTypeEnum,
-      IFCEXTRUDEDAREASOLID, IfcExtrudedAreaSolid,
-      IFCCARTESIANPOINT, IfcCartesianPoint,
-      IFCCOLUMN, IfcColumn } = window.WebIFCThree.WebIFC;
-      const ifcManager = window.WebIFCThree.createScene(document.getElementById('threeCanvas'));
-      const ifcAPI = ifcManager.ifcLoader.ifcManager.ifcAPI;
+        const {
+            IFCLOCALPLACEMENT, IfcLocalPlacement,
+            IFCDIRECTION, IfcDirection,
+            IFCAXIS2PLACEMENT3D, IfcAxis2Placement3D,
+            IFCAXIS2PLACEMENT2D, IfcAxis2Placement2D,
+            IFCCIRCLEPROFILEDEF, IfcCircleProfileDef,
+            IfcProfileTypeEnum,
+            IFCEXTRUDEDAREASOLID, IfcExtrudedAreaSolid,
+            IFCCARTESIANPOINT, IfcCartesianPoint,
+            IFCCOLUMN, IfcColumn, IfcAPI } = window.WebIFCThree.WebIFC;
+        const ifcManager = window.WebIFCThree.createScene(document.getElementById('threeCanvas'));
 
-      const doStuff = () => {
+    
         
-      
 
-     let modelID = ifcAPI.CreateModel();
+                
+            // CENTRIFUGALFORWARDCURVED	Air flows through the impeller radially using blades that are forward curved.
+            // CENTRIFUGALRADIAL	Air flows through the impeller radially using blades that are uncurved or slightly forward curved.
+            // CENTRIFUGALBACKWARDINCLINEDCURVED	Air flows through the impeller radially using blades that are backward curved.
+            // CENTRIFUGALAIRFOIL	Air flows through the impeller radially using blades that are airfoil shaped.
+            // TUBEAXIAL	Air flows through the impeller axially with guide vanes and reduced running blade tip clearance.
+            // VANEAXIAL	Air flows through the impeller axially with guide vanes and reduced running blade tip clearance.
+            // PROPELLORAXIAL	Air flows through the impeller axially and small hub-to-tip ratio impeller mounted in an orifice plate or inlet ring.
+            // USERDEFINED	User-defined fan type.
+            // NOTDEFINED
+
+
+        const ifcApi = new IfcAPI();
+        ifcApi.Init()
+        .then(() => {
+            doStuff(ifcApi);
+        });
+
+        
+
+        const doStuff = ifcAPI => {
+            let modelID = ifcAPI.CreateModel();
+
+
+
+          
     /** */
     let EID = 1;
 
@@ -214,28 +239,56 @@
 
     // https://tomvandig.github.io/web-ifc/examples/viewer/index.html
     StandardColumn(modelID, ifcAPI, makePt(0, 0, 0));
-    
-    let data = ifcAPI.ExportFileAsIFC(modelID);
-      }
-  debugger;
 
-    // let content = new TextDecoder()
-    // .decode(data)
-    // .replace("FILE_SCHEMA(('IFC2X3'));", "FILE_SCHEMA(('IFC4'));");
-    // console.log(content);
-    // ifcAPI.CloseModel(modelID);
-    // return ifcLoader.parse(new TextEncoder().encode(content));
+            // // https://tomvandig.github.io/web-ifc/examples/viewer/index.html
+            // StandardColumn(, ifcAPI, makePt(0, 0, 0));
+
+            let ifcData = ifcAPI.ExportFileAsIFC(modelID);
+            debugger;
 
 
 
-      const input = document.querySelector('input[type="file"]');
-      input.addEventListener('change', changed => {
-        ifcManager
-        .loadIFC(changed)
-        .then(() => {
-          console.log("loaded");
-        })
-      }, false);
+            let ifcDataString = new TextDecoder().decode(ifcData);
+            console.log(ifcDataString);
+
+//             const a = ifcManager.ifcLoader.parse(new TextEncoder().encode(ifcDataString));
+// debugger;
+                ifcManager
+                .loadIFC(new Blob([ifcData], { type: "application/x-step" }))
+                .then(() => {
+                    console.log("loaded");
+                })
+            
+
+            //   ifcAPI.CloseModel(model);
+            //   let m2 = ifcAPI.OpenModel(ifcData);
+            //   ifcThree.LoadAllGeometry(scene, m2);
+
+
+
+
+
+
+
+
+
+
+
+           //ifcAPI.CloseModel(modelID);
+            // return ifcLoader.parse(new TextEncoder().encode(content));
+        }
+
+
+
+        const input = document.querySelector('input[type="file"]');
+        input.addEventListener('change', changed => {
+            ifcManager
+                .loadIFC(changed.target.files[0])
+                .then(() => {
+                    console.log("done");
+                })
+        }, false);
     </script>
-  </body>
+</body>
+
 </html>

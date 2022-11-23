@@ -23,22 +23,22 @@
   },
   "homepage": "https://github.com/agviegas/web-ifc-three#readme",
   "scripts": {
-    "build": "rollup -c && npm run copy-files",
+    "build": "rollup -c && npm run-script copy-wasm && npm run-script copy-worker",
     "watch": "rollup -c -w",
-    "copy-files": "cpy ./node_modules/web-ifc/web-ifc.wasm dist && cpy ./node_modules/web-ifc/web-ifc-mt.wasm dist && cpy ./node_modules/web-ifc-three/IFCWorker.js dist && cpy ./node_modules/web-ifc-three/IFCWorker.js.map dist"
+    "copy-wasm": "xcopy /H /Y /C \"node_modules\\web-ifc\\*.wasm\" \"dist\"",
+    "copy-worker": "xcopy /H /Y /C \"node_modules\\web-ifc-three\\IFCWorker.*\" \"dist\""
   },
   "dependencies": {
     "client-zip": "^2.2.2",
     "stats.js": "^0.17.0",
     "three": "^0.135.0",
-    "web-ifc": "^0.0.36",
-    "web-ifc-three": "0.0.121"
+    "web-ifc": "^0.0.35",
+    "web-ifc-three": "0.0.119"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
     "@rollup/plugin-babel": "^6.0.2",
     "@rollup/plugin-commonjs": "^22.0.2",
-    "@rollup/plugin-terser": "^0.1.0",
-    "cpy-cli": "^3.1.1"
+    "@rollup/plugin-terser": "^0.1.0"
   }
 }
