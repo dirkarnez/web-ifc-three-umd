@@ -254,7 +254,7 @@
 //             const a = ifcManager.ifcLoader.parse(new TextEncoder().encode(ifcDataString));
 // debugger;
                 ifcManager
-                .loadIFC(new Blob([ifcData], { type: "application/x-step" }))
+                .loadIFC(new Blob([ifcData], { type: "application/x-step" })) // content-type: application/octet-stream
                 .then(() => {
                     console.log("loaded");
                 })
